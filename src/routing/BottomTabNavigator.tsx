@@ -3,6 +3,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors, Routes } from "../constants";
 import HomeStackNavigator from "./stacks/HomeStack";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { FeatherIcon } from "../components/icons";
+import UsersStackNavigator from "./stacks/UsersStack";
+import SettingsStackNavigator from "./stacks/SettingsStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,38 +21,53 @@ const TabStackNavigation = (): React.ReactElement => {
           borderTopRightRadius: 0,
           backgroundColor: Colors.default.white,
           paddingBottom: 10,
-          paddingTop: 10,
           height: 60,
         },
       })}
     >
       <Tab.Screen
-        name={Routes.HOME}
+        name={Routes.HOME_TAB}
         component={HomeStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <AntDesign
+            <FeatherIcon
               name="home"
-              size={32}
+              size={24}
               color={
-                focused ? Colors.default.primary : Colors.default.secondary
+                focused ? Colors.default.primary : Colors?.default.secondary
               }
             />
           ),
         }}
       />
       <Tab.Screen
-        name={Routes.COMMENTS_SCREEN}
-        component={HomeStackNavigator}
+        name={Routes.USERS_TAB}
+        component={UsersStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <AntDesign
-              name="home"
-              size={32}
+            <FeatherIcon
+              name="users"
+              size={24}
               color={
-                focused ? Colors.default.primary : Colors.default.secondary
+                focused ? Colors.default.primary : Colors?.default.secondary
+              }
+            />
+          ),
+        }}
+      />
+        <Tab.Screen
+        name={Routes.SETTINGS_TAB}
+        component={SettingsStackNavigator}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <FeatherIcon
+              name="settings"
+              size={24}
+              color={
+                focused ? Colors.default.primary : Colors?.default.secondary
               }
             />
           ),

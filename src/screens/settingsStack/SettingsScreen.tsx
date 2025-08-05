@@ -18,38 +18,16 @@ import {
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import AddPostHeader from "./components/AddPostHeader";
-import PostList from "../../components/postList";
-import { PostPayload } from "../../interfaces";
-import { mockPosts } from "../../mockData/mockPosts";
+import { SettingsStackNavigationProps } from "../../routing/stacks/SettingsStack";
 
 interface Props {
-  navigation: HomeStackNavigationProps<typeof Routes.HOME>;
+  navigation: SettingsStackNavigationProps<typeof Routes.SETTINGS>;
 }
 
-const HomeScreen = ({ navigation }: Props) => {
-  const [posts, setPosts] = useState<PostPayload[]>([]);
-
-  useEffect(() => {
-    setPosts(mockPosts);
-  }, []);
-
-  const handleOnPostPress = (post: PostPayload) => {
-    navigation.navigate(Routes.VIEW_POST, { postId: post.id })
-  };
-
-  const handleOnAvatarPressed = (userId: number) => {
-    console.log(userId, "userId");
-  };
-
+const SettingsScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
-      <AddPostHeader userPost={() => {}} />
-      <PostList
-        posts={posts}
-        onPostPressed={handleOnPostPress}
-        onAvatarPressed={handleOnAvatarPressed}
-      />
+        <Text>HI THERE FROM THE Settings SCREEN</Text>
     </SafeAreaView>
   );
 };
@@ -61,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default SettingsScreen;

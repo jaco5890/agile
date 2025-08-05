@@ -1,7 +1,7 @@
-import { UserPayload } from "./user-interface";
+import { AuthorPayload } from "./author-interface";
 
 export interface CommentPayload {
   id: number;
   content: string;
-  author: UserPayload;
+  author: AuthorPayload;
 }

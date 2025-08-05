@@ -8,5 +8,7 @@ export default {
         red: '#FF0000',
         dark: '#000000',
         white: '#ffffff',
+        inputBorder: '#ECECEC',
+        grey: '#888'
     },
 }
