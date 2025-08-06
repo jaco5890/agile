@@ -1,6 +1,20 @@
-# Welcome to your Expo app 👋
+# AGILE-BRIDGE-SOCIAL-MEDIA-APP
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
+## Prerequisites
+
+- [Node.js 22](https://nodejs.org) and npm (Recommended: Use [nvm](https://github.com/nvm-sh/nvm))
+
+## Base dependencies
+
+- [fetch](https://reactnative.dev/docs/network) for networking.
+- [prop-types](https://github.com/facebook/prop-types) to type-check our components exposed properties.
+- [react-native-config](https://github.com/luggit/react-native-config) to manage envionments.
+- [react-navigation](https://reactnavigation.org/) navigation library.
+- [redux](https://redux.js.org/) for state management.
+- [npm](https://npm.com)
+
 
 ## Get started
 
@@ -24,6 +38,13 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Setup environments
+- Environment can be changed by modifying the isProduction located in src/constant/environments.ts
+
+## API calls
+- Currently all "api calls" are being mocked and is reading the data from the mockData folder
+- There are two folders one being services and the other servicesMock, they have the same api's, and can be implented by simply changing the import
 
 ## Get a fresh project
 
