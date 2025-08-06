@@ -4,7 +4,7 @@ import {
   StackNavigationProp,
 } from "@react-navigation/stack";
 import { Routes } from "../../constants";
-import SettingsScreen from "../../screens/settingsStack/SettingsScreen";
+import SettingsScreen from "../../screens/settings/SettingsScreen";
 
 export type SettingsStackNavigatorParamList = {
   [Routes.SETTINGS]: undefined;

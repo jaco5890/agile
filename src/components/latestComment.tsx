@@ -8,16 +8,21 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import { Colors } from "../constants";
-import { CommentPayload } from "../interfaces";
+import { IComment } from "../interfaces";
 
 interface Props {
-  comment: CommentPayload;
+  comment: IComment;
   onAvatarPress: (userId: number) => void;
+  onShowAllCommentsPress: () => void;
 }
 
-export const LatestCommentCard = ({ comment, onAvatarPress }: Props) => {
+export const LatestCommentCard = ({
+  comment,
+  onAvatarPress,
+  onShowAllCommentsPress,
+}: Props) => {
   const handlePress = (event: GestureResponderEvent) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Prevents parent TouchableOpacity from firing (like in a list row)
     onAvatarPress(comment.author.id);
   };
 
@@ -36,6 +41,12 @@ export const LatestCommentCard = ({ comment, onAvatarPress }: Props) => {
       </View>
 
       <Text style={styles.commentContent}>{comment.content}</Text>
+
+      {onShowAllCommentsPress && (
+        <TouchableOpacity onPress={onShowAllCommentsPress}>
+          <Text style={styles.showAllComments}>Show all comments</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -70,8 +81,15 @@ const styles = StyleSheet.create({
   },
   commentContent: {
     color: Colors.default.grey,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "500",
     marginLeft: 6,
+  },
+  showAllComments: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.default.primary,
+    marginLeft: 6,
+    marginTop: 10,
   },
 });

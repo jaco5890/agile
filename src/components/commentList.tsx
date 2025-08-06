@@ -7,16 +7,16 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { CommentPayload } from "../interfaces";
+import { IComment } from "../interfaces";
 import { Colors } from "../constants";
 
 interface Props {
-  comments: CommentPayload[];
+  comments: IComment[];
   onAvatarPress: (userId: number) => void;
 }
 
 export const CommentList = ({ comments, onAvatarPress }: Props) => {
-  const renderItem = ({ item }: { item: CommentPayload }) => (
+  const renderItem = ({ item }: { item: IComment }) => (
     <View style={styles.commentItem}>
       <TouchableOpacity onPress={() => onAvatarPress(item.author.id)}>
         <Image source={{ uri: item.author.avatar }} style={styles.avatar} />
@@ -30,7 +30,7 @@ export const CommentList = ({ comments, onAvatarPress }: Props) => {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>All Comments</Text>
+      <Text style={styles.title}>{comments?.length > 0 ? 'All Comments' : 'No Comments'}</Text>
       <FlatList
         data={comments}
         keyExtractor={(item) => item.id.toString()}
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     paddingHorizontal: 12,
-    paddingTop: 12,
+    paddingTop: 16,
     paddingBottom: 6,
     color: Colors.default.primary,
   },

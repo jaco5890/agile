@@ -19,7 +19,7 @@ export const setIsAuthenticated = createAction(
 );
 
 export const selectIsAuthenticated = (state: RootState): boolean =>
-  state.appState.isRunning;
+  state.appState.isAuthenticated;
 
 const appStateReducer = createReducer(initialState, builder => {
   builder.addCase(setIsAuthenticated, (state, action) => {

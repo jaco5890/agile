@@ -9,6 +9,7 @@ import {
 } from "@ui-kitten/components";
 import { Colors } from "../constants";
 
+//change props any to actual props
 export const CustomInput = (props: any): React.ReactElement => {
   const {
     caption,

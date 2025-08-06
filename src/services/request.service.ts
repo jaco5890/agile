@@ -2,14 +2,14 @@ type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 interface WebRequestOptions {
   method?: RequestMethod;
-  endpoint: string;
+  url: string;
   token?: string;
   payload?: any;
 }
 
 export async function MakeWebRequest({
   method = "GET",
-  endpoint,
+  url,
   token,
   payload,
 }: WebRequestOptions): Promise<any> {
@@ -25,7 +25,7 @@ export async function MakeWebRequest({
       ...(payload && method !== "GET" && { body: JSON.stringify(payload) }),
     };
 
-    const response = await fetch(endpoint, options);
+    const response = await fetch(url, options);
 
     const contentType = response.headers.get("Content-Type");
     const isJson = contentType?.includes("application/json");

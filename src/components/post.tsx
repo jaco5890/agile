@@ -8,21 +8,29 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import { Colors } from "../constants";
-import { PostPayload } from "../interfaces";
+import { IPost } from "../interfaces";
 import { FeatherIcon } from "./icons";
 import { LatestCommentCard } from "./latestComment";
 
 interface Props {
-  post: PostPayload;
-  onPostPressed: (post: PostPayload) => void;
+  post: IPost;
+  onPostPressed: (post: IPost) => void;
   onAvatarPressed: (userId: number) => void;
+  avatarPressDisabled?: boolean;
 }
 
-export const PostCard = ({ post, onPostPressed, onAvatarPressed }: Props) => {
+export const PostCard = ({
+  post,
+  onPostPressed,
+  onAvatarPressed,
+  avatarPressDisabled = false,
+}: Props) => {
   const handleAvatarPress =
     (userId: number) => (event: GestureResponderEvent) => {
-      event.stopPropagation();
-      onAvatarPressed(userId);
+      if (!avatarPressDisabled) {
+        event.stopPropagation(); // Prevents parent TouchableOpacity from firing (like in a list row)
+        onAvatarPressed(userId);
+      }
     };
 
   return (
@@ -52,6 +60,7 @@ export const PostCard = ({ post, onPostPressed, onAvatarPressed }: Props) => {
           <LatestCommentCard
             comment={post.comments[0]}
             onAvatarPress={onAvatarPressed}
+            onShowAllCommentsPress={() => onPostPressed(post)}
           />
         </View>
       )}
@@ -64,7 +73,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 8,
     borderRadius: 8,
-    borderColor: Colors.default.inputBorder,
+    backgroundColor: Colors.default.white,
+    borderColor: Colors.default.grey,
     borderWidth: 1,
     marginHorizontal: 6,
   },

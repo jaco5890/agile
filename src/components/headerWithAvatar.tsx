@@ -1,5 +1,3 @@
-// components/HeaderWithAvatar.tsx
-
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 import { TopNavigation, TopNavigationAction, Text } from "@ui-kitten/components";

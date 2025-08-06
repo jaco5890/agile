@@ -4,7 +4,7 @@ import {
   StackNavigationProp,
 } from "@react-navigation/stack";
 import { Routes } from "../../constants";
-import LoginScreen from "../../screens/authStack/LoginScreen";
+import LoginScreen from "../../screens/auth/LoginScreen";
 
 export type AuthStackNavigatorParamList = {
   [Routes.SIGN_IN]: undefined;

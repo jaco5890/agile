@@ -1,9 +1,9 @@
-import { PostPayload } from "../interfaces";
+import { IPost } from "../interfaces";
 
-export const mockPosts: PostPayload[] = [
+export const mockPosts: IPost[] = [
   {
     id: 1,
-    content: "Just finished reading a great book on React Native!,Just finished reading a great book on React Native!,Just finished reading a great book on React Native!,Just finished reading a great book on React Native!",
+    content: "Just finished reading a great book on React Native!,",
     author: {
       id: 101,
       userName: "Alice Johnson",

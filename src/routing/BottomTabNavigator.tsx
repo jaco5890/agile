@@ -2,7 +2,6 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors, Routes } from "../constants";
 import HomeStackNavigator from "./stacks/HomeStack";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { FeatherIcon } from "../components/icons";
 import UsersStackNavigator from "./stacks/UsersStack";
 import SettingsStackNavigator from "./stacks/SettingsStack";

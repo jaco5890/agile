@@ -1,4 +1,4 @@
-export interface AuthorPayload {
+export interface IAuthor {
     id: number;
     userName: string;
     firstName: string;
