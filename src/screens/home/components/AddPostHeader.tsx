@@ -42,6 +42,7 @@ const AddPostHeader = (props: HeaderProps) => {
   );
 
   const handleOnAddPostPressed = () => {
+    clearText();
     userPost(post);
   };
 

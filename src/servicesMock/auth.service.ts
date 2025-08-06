@@ -11,11 +11,11 @@ export async function login(
   if (payload.userName === "test" && payload.password === "1234") {
     const mockUser: IUser = {
       id: 101,
-      userName: "mockuser",
-      firstName: "Mock",
-      lastName: "User",
-      email: "mockuser@example.com",
-      avatar: "https://placehold.co/100x100",
+      userName: "Alice Johnson",
+      firstName: "Alice",
+      lastName: "Johnson",
+      email: 'alice@gmail.com',
+      avatar: "https://i.pravatar.cc/150?img=1",
     };
 
     return {

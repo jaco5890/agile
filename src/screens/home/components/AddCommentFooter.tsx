@@ -49,11 +49,11 @@ const AddCommentFooter = (props: FooterProps) => {
       id: Date.now(),
       content: newComment,
       author: {
-        id: 1,
-        userName: "currentUser",
-        firstName: "Current",
-        lastName: "User",
-        avatar: "",
+        id: 101,
+        userName: "Alice Johnson",
+        firstName: "Alice",
+        lastName: "Johnson",
+        avatar: "https://i.pravatar.cc/150?img=1",
       },
     };
 

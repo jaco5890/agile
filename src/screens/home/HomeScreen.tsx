@@ -1,6 +1,6 @@
 import { HomeStackNavigationProps } from "../../routing/stacks/HomeStack";
 import { Colors, Routes } from "../../constants";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Animated, SafeAreaView, StyleSheet } from "react-native";
 import { IPost } from "../../interfaces";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import useFetch from "../../hooks/useFetch";
 import AddPostHeader from "./components/AddPostHeader";
 import HomeSkeleton from "../../components/skeletons/homeSkeleton";
 import PostList from "../../components/postList";
+import { useFocusEffect } from "@react-navigation/native";
 interface Props {
   navigation: HomeStackNavigationProps<typeof Routes.HOME>;
 }
@@ -28,8 +29,18 @@ const HomeScreen = ({ navigation }: Props) => {
   const fetchAllPosts = useCallback(() => getAllPosts(101), []);
 
   const { data, isLoading, error } = useFetch<IPost[]>(fetchAllPosts);
+  const [posts, setPosts] = useState<IPost[]>([]);
   const scrollY = useRef(new Animated.Value(0)).current;
   const insets = useSafeAreaInsets();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (data?.length) {
+        //manually setting posts to append list after adding new post
+        setPosts(data);
+      }
+    }, [data])
+  );
 
   const headerHeight = 80;
 
@@ -50,11 +61,11 @@ const HomeScreen = ({ navigation }: Props) => {
   const handleOnAddPostPressed = async (post: string) => {
     try {
       const currentAuthor: IAuthor = {
-        id: 12345, //stateUser.userInformation.id to be used
-        userName: "currentUser", //stateUser.userInformation.userName to be used
-        firstName: "Current", //stateUser.userInformation.firstName to be used
-        lastName: "User", //stateUser.userInformation.lastName to be used
-        avatar: "", // stateUser.userInformation.avatar to be used
+        id: stateUser.userInformation.id,
+        userName: stateUser.userInformation.userName,
+        firstName: stateUser.userInformation.firstName,
+        lastName: stateUser.userInformation.lastName,
+        avatar: stateUser.userInformation.avatar,
       };
 
       const newPost: IPost = {
@@ -67,6 +78,8 @@ const HomeScreen = ({ navigation }: Props) => {
       let commentResponse = await addPost(newPost);
       if (commentResponse?.id) {
         showSuccessToast("New post added successfully");
+        //adding latest post to list
+        setPosts((prev) => [commentResponse, ...prev]);
       } else {
         showErrorToast("Failed to add new post");
       }
@@ -103,7 +116,7 @@ const HomeScreen = ({ navigation }: Props) => {
     );
   }
 
-  if (!data) return null;
+  if (!posts) return null;
 
   if (error) {
     showErrorToast("Failed to retrieve all posts");
@@ -123,7 +136,7 @@ const HomeScreen = ({ navigation }: Props) => {
         <AddPostHeader userPost={handleOnAddPostPressed} />
       </Animated.View>
       <PostList
-        posts={data}
+        posts={posts}
         onPostPressed={handleOnPostPress}
         onAvatarPressed={handleOnAvatarPressed}
         scrollY={scrollY}

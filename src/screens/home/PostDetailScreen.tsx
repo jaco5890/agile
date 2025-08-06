@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -37,6 +37,7 @@ const PostDetailsScreen = ({ navigation, route }: Props) => {
   const fetchPosts = useCallback(() => getPost(postId), [postId]);
 
   const { data, isLoading, error } = useFetch<IPost>(fetchPosts);
+  const [comments, setComments] = useState<IComment[]>([]);
   const parentNav = navigation.getParent();
   const toast = useToast();
 
@@ -47,6 +48,15 @@ const PostDetailsScreen = ({ navigation, route }: Props) => {
       parentNav.setOptions({ tabBarStyle: { display: "none" } });
       return () => parentNav.setOptions({ tabBarStyle: undefined });
     }, [parentNav])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (data?.comments?.length) {
+        //manually setting posts to append list after adding new post
+        setComments(data?.comments);
+      }
+    }, [data])
   );
 
   const handleOnAvatarPressed = (userId: number) => {
@@ -62,6 +72,8 @@ const PostDetailsScreen = ({ navigation, route }: Props) => {
       let commentResponse = await addComment(comment);
       if (commentResponse?.id) {
         showSuccessToast("New comment added successfully");
+        //adding latest comment to list
+        setComments((prev) => [commentResponse, ...prev]);
       } else {
         showErrorToast("Failed to add new comment");
       }
@@ -119,7 +131,7 @@ const PostDetailsScreen = ({ navigation, route }: Props) => {
           <Text style={styles.postContent}>{data.content}</Text>
         </View>
         <CommentList
-          comments={data.comments}
+          comments={comments}
           onAvatarPress={handleOnAvatarPressed}
         />
         <AddCommentFooter userComment={handleAddCommentPressed} />
