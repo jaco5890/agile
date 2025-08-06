@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,9 @@ import { Colors } from "../constants";
 import { IPost } from "../interfaces";
 import { FeatherIcon } from "./icons";
 import { LatestCommentCard } from "./latestComment";
+import { useReduxSelector } from "../redux";
+import { selectLogin } from "../redux/reducers/userReducer";
+import { DeletePopup } from "./deletePopup";
 
 interface Props {
   post: IPost;
@@ -25,6 +28,10 @@ export const PostCard = ({
   onAvatarPressed,
   avatarPressDisabled = false,
 }: Props) => {
+  const stateUser = useReduxSelector(selectLogin);
+  const isAuthor = stateUser?.userInformation?.id === post.author.id;
+  const [displayDeletePopup, setDisplayDeletePopup] = useState(false);
+
   const handleAvatarPress =
     (userId: number) => (event: GestureResponderEvent) => {
       if (!avatarPressDisabled) {
@@ -33,13 +40,31 @@ export const PostCard = ({
       }
     };
 
+  const handleDeletePostClicked = () => {
+    setDisplayDeletePopup(true);
+  };
+
+  const handlePopupOutput = (output: boolean) => {
+    if (output) {
+      setDisplayDeletePopup(false);
+    }
+  };
+
   return (
     <TouchableOpacity style={styles.card} onPress={() => onPostPressed(post)}>
       <View style={styles.authorContainer}>
-        <TouchableOpacity onPress={handleAvatarPress(post.author.id)}>
-          <Image source={{ uri: post.author.avatar }} style={styles.avatar} />
-        </TouchableOpacity>
-        <Text style={styles.author}>{post.author.userName}</Text>
+        <View style={styles.authorLeft}>
+          <TouchableOpacity onPress={handleAvatarPress(post.author.id)}>
+            <Image source={{ uri: post.author.avatar }} style={styles.avatar} />
+          </TouchableOpacity>
+          <Text style={styles.author}>{post.author.userName}</Text>
+        </View>
+
+        {isAuthor && (
+          <TouchableOpacity onPress={handleDeletePostClicked}>
+            <FeatherIcon name="trash-2" size={20} color={Colors.default.grey} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <Text style={styles.content}>{post.content}</Text>
@@ -64,6 +89,14 @@ export const PostCard = ({
           />
         </View>
       )}
+
+      {displayDeletePopup && (
+        <DeletePopup
+          type={"post"}
+          targetId={post.id}
+          popupOutput={handlePopupOutput}
+        />
+      )}
     </TouchableOpacity>
   );
 };
@@ -77,11 +110,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.default.grey,
     borderWidth: 1,
     marginHorizontal: 6,
-  },
-  authorContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
   },
   avatar: {
     width: 32,
@@ -141,5 +169,15 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     marginRight: 3,
+  },
+  authorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between", // NEW: push delete icon to right
+    marginBottom: 8,
+  },
+  authorLeft: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

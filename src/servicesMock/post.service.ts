@@ -21,18 +21,19 @@ export async function getPost(postId: number): Promise<IPost> {
   return found;
 }
 
-export async function getUserPost(userId: number) {
+export async function getUserPost(userId: number): Promise<IPost[]> {
   await delay(1000);
   const data = mockPostsByAuthors.filter((p) => p.author.id === userId);
+  if (!data) throw new Error("Post not found");
   return data;
 }
 
-export async function addPost(newPost: IPost) {
+export async function addPost(newPost: IPost): Promise<IPost> {
   await delay(1000);
   return newPost;
 }
 
-export async function updatePost(updatedPost: IPost) {
+export async function updatePost(updatedPost: IPost): Promise<IPost | boolean> {
   await delay(1000);
   const index = mockPosts.findIndex((p) => p.id === updatedPost.id);
   if (index !== -1) {
@@ -43,7 +44,7 @@ export async function updatePost(updatedPost: IPost) {
   }
 }
 
-export async function removePost(postId: string) {
-  await delay(1000);
-  return true;
+export async function deletePost(postId: number): Promise<number> {
+  await delay(3000);
+  return postId;
 }

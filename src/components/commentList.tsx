@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FlatList,
   View,
@@ -9,6 +9,10 @@ import {
 } from "react-native";
 import { IComment } from "../interfaces";
 import { Colors } from "../constants";
+import { useReduxSelector } from "../redux";
+import { selectLogin } from "../redux/reducers/userReducer";
+import { FeatherIcon } from "./icons";
+import { DeletePopup } from "./deletePopup";
 
 interface Props {
   comments: IComment[];
@@ -16,17 +20,55 @@ interface Props {
 }
 
 export const CommentList = ({ comments, onAvatarPress }: Props) => {
-  const renderItem = ({ item }: { item: IComment }) => (
-    <View style={styles.commentItem}>
-      <TouchableOpacity onPress={() => onAvatarPress(item.author.id)}>
-        <Image source={{ uri: item.author.avatar }} style={styles.avatar} />
-      </TouchableOpacity>
-      <View style={styles.textContainer}>
-        <Text style={styles.author}>@{item.author.userName}</Text>
-        <Text style={styles.content}>{item.content}</Text>
+  const stateUser = useReduxSelector(selectLogin);
+  const [displayDeletePopup, setDisplayDeletePopup] = useState(false);
+
+  const handleDeletePostClicked = () => {
+    setDisplayDeletePopup(true);
+  };
+
+  const handlePopupOutput = (output: boolean) => {
+    if (output) {
+      setDisplayDeletePopup(false);
+    }
+  };
+
+  const renderItem = ({ item }: { item: IComment }) => {
+    const isAuthor = stateUser?.userInformation?.id === item.author.id;
+
+    return (
+      <View style={styles.commentItem}>
+        <TouchableOpacity onPress={() => onAvatarPress(item.author.id)}>
+          <Image source={{ uri: item.author.avatar }} style={styles.avatar} />
+        </TouchableOpacity>
+        <View style={styles.textContainer}>
+          <View style={styles.authorContainer}>
+            <Text style={styles.author}>@{item.author.userName}</Text>
+            {isAuthor && (
+              <TouchableOpacity
+                onPress={handleDeletePostClicked}
+                style={styles.deleteButton}
+              >
+                <FeatherIcon
+                  name="trash-2"
+                  size={20}
+                  color={Colors.default.grey}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+          <Text style={styles.content}>{item.content}</Text>
+        </View>
+        {displayDeletePopup && (
+          <DeletePopup
+            type={"comment"}
+            targetId={item.id}
+            popupOutput={handlePopupOutput}
+          />
+        )}
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.wrapper}>
@@ -76,6 +118,11 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
   },
+  authorContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   author: {
     fontSize: 14,
     fontWeight: "600",
@@ -85,5 +132,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.default.dark,
     marginTop: 2,
+  },
+  deleteButton: {
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
 });

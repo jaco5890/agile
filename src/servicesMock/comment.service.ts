@@ -16,7 +16,7 @@ export async function updateComment(
   return updatedComment;
 }
 
-export async function removeComment(commentId: string): Promise<boolean> {
+export async function deleteComment(commentId: number): Promise<number> {
   await delay(1000);
-  return true;
+  return commentId;
 }

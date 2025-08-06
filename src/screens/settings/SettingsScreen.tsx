@@ -1,5 +1,5 @@
 import { Colors, Routes } from "../../constants";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -39,11 +39,22 @@ const SettingsScreen = ({ navigation }: Props) => {
   const [isSecure, setIsSecure] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const hasInitialized = useRef(false);
 
   const [formState, dispatch] = useReducer(
     userFormReducer,
     userInformationInitialFormState
   );
+
+  useEffect(() => {
+    if (stateUser?.userInformation && !hasInitialized.current) {
+      populateFormFromUser(
+        stateUser.userInformation,
+        ['firstName', 'lastName', 'userName', 'email']
+      );
+      hasInitialized.current = true;
+    }
+  }, [stateUser?.userInformation]);
 
   useEffect(() => {
     const allFieldsFilled = Object.values(formState).every(
@@ -55,6 +66,20 @@ const SettingsScreen = ({ navigation }: Props) => {
 
     setIsFormValid(allFieldsFilled && noErrors);
   }, [formState]);
+
+  const populateFormFromUser = (
+    user: Partial<IUser>,
+    fieldKeys: FieldKey[]
+  ) => {
+    fieldKeys.forEach((field) => {
+      const value = user[field];
+      if (value !== undefined) {
+        dispatch({ type: 'SET_VALUE', field, value });
+        dispatch({ type: 'SET_ERROR', field, error: '' });
+        dispatch({ type: 'SET_STATUS', field, status: 'basic' });
+      }
+    });
+  };
 
   const toggleVisibility = () => {
     setIsSecure(!isSecure);

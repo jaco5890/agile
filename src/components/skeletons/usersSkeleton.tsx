@@ -22,7 +22,8 @@ const styles = StyleService.create({
   },
   content: {
     backgroundColor: Colors.default.inputBorder,
-    width: "100%",
+    width: "95%",
+    marginLeft: 10,
     height: 50,
     marginBottom: 16,
     borderRadius: 5,
