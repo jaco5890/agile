@@ -48,10 +48,12 @@ const SettingsScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (stateUser?.userInformation && !hasInitialized.current) {
-      populateFormFromUser(
-        stateUser.userInformation,
-        ['firstName', 'lastName', 'userName', 'email']
-      );
+      populateFormFromUser(stateUser.userInformation, [
+        "firstName",
+        "lastName",
+        "userName",
+        "email",
+      ]);
       hasInitialized.current = true;
     }
   }, [stateUser?.userInformation]);
@@ -74,9 +76,9 @@ const SettingsScreen = ({ navigation }: Props) => {
     fieldKeys.forEach((field) => {
       const value = user[field];
       if (value !== undefined) {
-        dispatch({ type: 'SET_VALUE', field, value });
-        dispatch({ type: 'SET_ERROR', field, error: '' });
-        dispatch({ type: 'SET_STATUS', field, status: 'basic' });
+        dispatch({ type: "SET_VALUE", field, value });
+        dispatch({ type: "SET_ERROR", field, error: "" });
+        dispatch({ type: "SET_STATUS", field, status: "basic" });
       }
     });
   };
