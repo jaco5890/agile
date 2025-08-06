@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   commentCountContainer: {
-    marginTop: 50,
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",

@@ -41,6 +41,10 @@ const AddPostHeader = (props: HeaderProps) => {
     </TouchableOpacity>
   );
 
+  const handleOnAddPostPressed = () => {
+    userPost(post);
+  };
+
   const showButton = post.length > 0;
   const inputWidth = showButton
     ? SCREEN_WIDTH - (PADDING * 2 + BUTTON_WIDTH + 8)
@@ -66,8 +70,15 @@ const AddPostHeader = (props: HeaderProps) => {
         value={post}
       />
       {showButton && (
-        <TouchableOpacity style={styles.addButtonContainer}>
-          <FeatherIcon name="plus-circle" size={24} color={Colors.default.white} />
+        <TouchableOpacity
+          style={styles.addButtonContainer}
+          onPress={handleOnAddPostPressed}
+        >
+          <FeatherIcon
+            name="plus-circle"
+            size={24}
+            color={Colors.default.white}
+          />
         </TouchableOpacity>
       )}
     </View>
@@ -91,8 +102,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     backgroundColor: Colors.default.primary,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

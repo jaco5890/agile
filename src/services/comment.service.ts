@@ -5,7 +5,7 @@ import { IComment } from "../interfaces/comment.interface";
 const baseUrl = `${ServicePath.url.base}${ServicePath.url.commentServicePath}`;
 
 export function addComment(IComment: IComment, token: string) {
-  const url = `${baseUrl}`
+  const url = `${baseUrl}`;
   return MakeWebRequest({
     method: "POST",
     url,
@@ -15,7 +15,7 @@ export function addComment(IComment: IComment, token: string) {
 }
 
 export function updateComment(IComment: IComment, token: string) {
-  const url = `${baseUrl}`
+  const url = `${baseUrl}`;
 
   return MakeWebRequest({
     method: "PUT",
@@ -26,7 +26,7 @@ export function updateComment(IComment: IComment, token: string) {
 }
 
 export function removeComment(id: string, token: string) {
-  const url = `${baseUrl}/${id}`
+  const url = `${baseUrl}/${id}`;
 
   return MakeWebRequest({
     method: "DELETE",

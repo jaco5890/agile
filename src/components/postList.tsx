@@ -1,8 +1,7 @@
-import { IPost } from "../interfaces";
 import React from "react";
 import { Animated, Dimensions, StyleSheet } from "react-native";
-import { PostCard } from "./post";
-import { Colors } from "../constants";
+import { PostCard } from "./postCard";
+import { IPost } from "../interfaces";
 
 interface PostListProps {
   posts: IPost[];

@@ -1,6 +1,6 @@
 import { IAuthor } from "./author.interface";
 export interface IComment {
-  id: number;
+  id?: number;
   content: string;
   author: IAuthor;
 }

@@ -1,4 +1,4 @@
-import Environments  from "./environments";
+import Environments from "./environments";
 
 export default {
   url: {

@@ -1,24 +1,20 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 import { RootState } from "../index";
+import { IUser } from "../../interfaces";
 
 type UserState = {
-  userInformation: UserInformation;
+  userInformation: IUser;
   token: string;
 };
 
-type UserInformation = {
-  username: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-};
+type UserInformation = IUser;
 
 const initialState: UserState = {
   userInformation: {
-    username: "",
+    userName: "",
     firstName: "",
     lastName: "",
-    password: "",
+    email: "",
   },
   token: "",
 };

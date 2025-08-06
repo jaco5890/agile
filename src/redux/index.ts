@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import {
   persistStore,
   persistReducer,
@@ -9,26 +9,24 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import rootReducer from './rootReducer';
+} from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import rootReducer from "./rootReducer";
 
 export type RootState = ReturnType<typeof rootReducer>;
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   version: 1,
   storage: AsyncStorage,
-  whitelist: [
-    'user',
-  ],
+  whitelist: ["user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

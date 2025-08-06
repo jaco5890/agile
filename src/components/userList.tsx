@@ -1,8 +1,5 @@
-import { IPost } from "../interfaces";
 import React from "react";
-import { Animated, Dimensions, FlatList, StyleSheet } from "react-native";
-import { PostCard } from "./post";
-import { Colors } from "../constants";
+import { FlatList } from "react-native";
 import { IAuthor } from "../interfaces/author.interface";
 import { UserCard } from "./user";
 

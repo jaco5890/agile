@@ -1,5 +1,4 @@
 export default {
-    versionNumber: '1.0.0',
-    buildNumber: '001',
-  };
-  
+  versionNumber: "1.0.0",
+  buildNumber: "001",
+};

@@ -57,8 +57,8 @@ const AddCommentFooter = (props: FooterProps) => {
       },
     };
 
-    userComment(comment);
     clearText();
+    userComment(comment);
   };
 
   const showButton = newComment.length > 0;

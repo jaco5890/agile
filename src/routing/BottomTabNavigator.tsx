@@ -1,10 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors, Routes } from "../constants";
-import HomeStackNavigator from "./stacks/HomeStack";
 import { FeatherIcon } from "../components/icons";
 import UsersStackNavigator from "./stacks/UsersStack";
 import SettingsStackNavigator from "./stacks/SettingsStack";
+import HomeStackNavigator from "./stacks/HomeStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +56,7 @@ const TabStackNavigation = (): React.ReactElement => {
           ),
         }}
       />
-        <Tab.Screen
+      <Tab.Screen
         name={Routes.SETTINGS_TAB}
         component={SettingsStackNavigator}
         options={{

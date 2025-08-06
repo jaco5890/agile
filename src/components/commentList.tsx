@@ -30,7 +30,9 @@ export const CommentList = ({ comments, onAvatarPress }: Props) => {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>{comments?.length > 0 ? 'All Comments' : 'No Comments'}</Text>
+      <Text style={styles.title}>
+        {comments?.length > 0 ? "All Comments" : "No Comments"}
+      </Text>
       <FlatList
         data={comments}
         keyExtractor={(item) => item.id.toString()}
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     paddingHorizontal: 12,
     paddingTop: 16,
     paddingBottom: 6,

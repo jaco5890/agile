@@ -1,73 +1,49 @@
+import { mockPostsByAuthors } from "../mockData/mockPostsByAuthor";
 import { IPost } from "../interfaces/post.interface";
 import { mockPosts } from "../mockData/mockPosts";
 
 function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function getAllPosts(userId: string) {
+export async function getAllPosts(userId: number) {
+  //userId would have been used to retrieve all posts for a user
   await delay(1000);
-  const data = mockPosts.filter(p => p.author.id.toString() === userId);
-  return {
-    data,
-    responseCode: 200,
-    error: ""
-  };
+  const data = mockPosts;
+  if (!data) throw new Error("No posts found");
+  return data;
 }
 
-export async function getPost(postId: string) {
+export async function getPost(postId: number): Promise<IPost> {
   await delay(1000);
-  const found = mockPosts.find(p => p.id.toString() === postId);
-  return {
-    data: found || null,
-    responseCode: found ? 200 : 404,
-    error: found ? "" : "Post not found"
-  };
+  const found = mockPosts.find((p) => p.id === postId);
+  if (!found) throw new Error("Post not found");
+  return found;
 }
 
-export async function getUserPost(userId: string) {
+export async function getUserPost(userId: number) {
   await delay(1000);
-  const data = mockPosts.filter(p => p.author.id.toString() === userId);
-  return {
-    data,
-    responseCode: 200,
-    error: ""
-  };
+  const data = mockPostsByAuthors.filter((p) => p.author.id === userId);
+  return data;
 }
 
 export async function addPost(newPost: IPost) {
   await delay(1000);
-  return {
-    data: newPost,
-    responseCode: 201,
-    error: ""
-  };
+  return newPost;
 }
 
 export async function updatePost(updatedPost: IPost) {
   await delay(1000);
-  const index = mockPosts.findIndex(p => p.id === updatedPost.id);
+  const index = mockPosts.findIndex((p) => p.id === updatedPost.id);
   if (index !== -1) {
     mockPosts[index] = updatedPost;
-    return {
-      data: updatedPost,
-      responseCode: 200,
-      error: ""
-    };
+    return updatedPost;
   } else {
-    return {
-      data: null,
-      responseCode: 404,
-      error: "Post not found"
-    };
+    return false;
   }
 }
 
 export async function removePost(postId: string) {
   await delay(1000);
-  return {
-    data: [],
-    responseCode: 200,
-    error: ""
-  };
+  return true;
 }

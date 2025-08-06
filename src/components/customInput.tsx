@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageProps, Keyboard, Platform, TextStyle, View } from "react-native";
+import { Keyboard, TextStyle } from "react-native";
 import {
   Input,
   Text,
@@ -9,7 +9,6 @@ import {
 } from "@ui-kitten/components";
 import { Colors } from "../constants";
 
-//change props any to actual props
 export const CustomInput = (props: any): React.ReactElement => {
   const {
     caption,
@@ -43,10 +42,6 @@ export const CustomInput = (props: any): React.ReactElement => {
     return <Text style={styles.errorMessage as TextStyle}>{caption}</Text>;
   };
 
-  const renderRightIcon = (): React.ReactElement => {
-    return <View style={styles.rightIcon as ImageProps}>{rightIcon}</View>;
-  };
-
   return (
     <Input
       autoCapitalize="none"
@@ -74,7 +69,7 @@ export const CustomInput = (props: any): React.ReactElement => {
       onBlur={() => onInputBlur(false)}
       onChangeText={(text) => onInputChangeText(text)}
       accessoryLeft={leftIcon}
-      accessoryRight={renderRightIcon}
+      accessoryRight={rightIcon}
       onFocus={() => onInputFocus(true)}
       onSubmitEditing={() => {
         if (returnKeyType === "next") {
@@ -133,7 +128,7 @@ const themedStyles = StyleService.create({
     borderRadius: 8,
   },
   focusInputLabelStyleIsFocus: {
-    color: Colors.default.primary,
+    color: Colors.default.secondary,
     fontSize: 13,
     paddingBottom: 8,
   },
@@ -148,7 +143,7 @@ const themedStyles = StyleService.create({
     paddingBottom: 8,
   },
   basic: {
-    color: Colors.default.primary,
+    color: Colors.default.secondary,
     fontSize: 13,
     paddingBottom: 8,
   },

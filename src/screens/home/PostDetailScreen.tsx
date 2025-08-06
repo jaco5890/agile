@@ -1,28 +1,27 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import {
   SafeAreaView,
   StyleSheet,
   View,
   Text,
   KeyboardAvoidingView,
-  TouchableOpacity,
-  TextInput,
   Platform,
-  ActivityIndicator,
 } from "react-native";
 import { HomeStackNavigatorParamList } from "../../routing/stacks/HomeStack";
 import { Colors, Routes } from "../../constants";
 import { CommentList } from "../../components/commentList";
 import { IComment, IPost } from "../../interfaces";
-import { mockPosts } from "../../mockData/mockPosts";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HeaderWithAvatar } from "../../components/headerWithAvatar";
 import { useFocusEffect } from "@react-navigation/native";
-import { FeatherIcon } from "../../components/icons";
-import { CustomInput } from "../../components/customInput";
+import { getPost } from "../../servicesMock/post.service";
+import { useToast } from "react-native-toast-notifications";
+import { addComment } from "../../servicesMock/comment.service";
+import { useReduxSelector } from "../../redux";
+import { selectLogin } from "../../redux/reducers/userReducer";
 import AddCommentFooter from "./components/AddCommentFooter";
 import useFetch from "../../hooks/useFetch";
-import { getAllPosts } from "../../servicesMock/post.service";
+import PostDetailsSkeleton from "../../components/skeletons/postDetailsSkeleton";
 
 type Props = StackScreenProps<
   HomeStackNavigatorParamList,
@@ -30,20 +29,17 @@ type Props = StackScreenProps<
 >;
 
 const PostDetailsScreen = ({ navigation, route }: Props) => {
-  //if a real api call was made here, the token would have been passed through as well
-  const fetchPosts = useCallback(() => getAllPosts("101"), []);
-
-  const { data, isLoading, error } = useFetch(fetchPosts);
   const { postId } = route.params;
+  const stateUser = useReduxSelector(selectLogin);
+  //if a real api call was made here, the token would have been passed through as well retrieved from stateUser
+  //if a real api call was made here, the postId would have been passed through as well retrieved from stateUser
+  //stateUser.token
+  const fetchPosts = useCallback(() => getPost(postId), [postId]);
+
+  const { data, isLoading, error } = useFetch<IPost>(fetchPosts);
   const parentNav = navigation.getParent();
+  const toast = useToast();
 
-  const [post, setPost] = useState<IPost | null>(null);
-  const [localLoading, setLocalLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState(
-    "Retrieving all user posts"
-  );
-
-  console.log(data, "DATA");
   useFocusEffect(
     useCallback(() => {
       if (!parentNav) return;
@@ -53,44 +49,60 @@ const PostDetailsScreen = ({ navigation, route }: Props) => {
     }, [parentNav])
   );
 
-  useEffect(() => {
-    if (isLoading) {
-      setLoadingMessage("Retrieving all user posts");
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const foundPost = mockPosts.find((p) => p.id === postId);
-      setPost(foundPost || null);
-    };
-
-    fetchPost();
-  }, [postId]);
-
   const handleOnAvatarPressed = (userId: number) => {
-    console.log(userId, "userId");
-    // navigation.push(Routes.VIEW_PROFILE, { userId });
+    navigation.navigate(Routes.USER_POSTS, { userId });
+  };
+
+  const handleOnBackPressed = () => {
+    navigation.goBack();
   };
 
   const handleAddCommentPressed = async (comment: IComment) => {
-    setLoadingMessage("Adding comment...");
-    setLocalLoading(true);
-
     try {
-      // Simulate API call for adding comment
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      let commentResponse = await addComment(comment);
+      if (commentResponse?.id) {
+        showSuccessToast("New comment added successfully");
+      } else {
+        showErrorToast("Failed to add new comment");
+      }
     } catch (error) {
-      // Handle error
-      console.log("Error adding comment", error);
-    } finally {
-      setLocalLoading(false);
+      const err = error as Error;
+      showErrorToast(err?.message || "Failed to add comment, please try again");
     }
   };
 
-  if (!post) return null;
+  const showSuccessToast = (message: string) => {
+    toast.show(message, {
+      type: "success",
+      placement: "bottom",
+      duration: 3000,
+      animationType: "slide-in",
+    });
+  };
+
+  const showErrorToast = (message: string) => {
+    toast.show(message, {
+      type: "danger",
+      placement: "bottom",
+      duration: 3000,
+      animationType: "slide-in",
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <PostDetailsSkeleton />
+        <PostDetailsSkeleton />
+      </SafeAreaView>
+    );
+  }
+
+  if (!data) return null;
+
+  if (error) {
+    showErrorToast("Failed to retrieve post");
+  }
 
   return (
     <KeyboardAvoidingView
@@ -99,15 +111,15 @@ const PostDetailsScreen = ({ navigation, route }: Props) => {
     >
       <SafeAreaView style={styles.container}>
         <HeaderWithAvatar
-          avatarUrl={post.author.avatar}
-          username={post.author.userName}
-          onBackPress={navigation.goBack}
+          avatarUrl={data.author.avatar}
+          username={data.author.userName}
+          onBackPress={handleOnBackPressed}
         />
         <View style={styles.postContainer}>
-          <Text style={styles.postContent}>{post.content}</Text>
+          <Text style={styles.postContent}>{data.content}</Text>
         </View>
         <CommentList
-          comments={post.comments}
+          comments={data.comments}
           onAvatarPress={handleOnAvatarPressed}
         />
         <AddCommentFooter userComment={handleAddCommentPressed} />

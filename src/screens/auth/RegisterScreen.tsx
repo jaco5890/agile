@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SettingsStackNavigationProps } from "../../routing/stacks/SettingsStack";
 import { Header } from "../../components/header";
 import { userFormReducer } from "../../forms/reducers/userForm.reducer";
 import { userInformationInitialFormState } from "../../forms/initialState/userForm.state";
@@ -19,23 +18,18 @@ import { FieldKey } from "../../forms/types/userForm.types";
 import { validEmail } from "../../utils/regex";
 import { CustomInput } from "../../components/customInput";
 import { FeatherIcon } from "../../components/icons";
-import { useReduxSelector } from "../../redux";
-import { selectLogin, setLogin } from "../../redux/reducers/userReducer";
-import { useDispatch } from "react-redux";
-import { setIsAuthenticated } from "../../redux/reducers/appStateReducer";
+import { register } from "../../servicesMock/auth.service";
+import { IRegister } from "../../interfaces";
 import { useToast } from "react-native-toast-notifications";
-import { IUser } from "../../interfaces";
-import { updateAccount } from "../../servicesMock/auth.service";
+import { AuthStackNavigationProps } from "../../routing/stacks/AuthStack";
 
 interface Props {
-  navigation: SettingsStackNavigationProps<typeof Routes.SETTINGS>;
+  navigation: AuthStackNavigationProps<typeof Routes.REGISTER>;
 }
 
-const SettingsScreen = ({ navigation }: Props) => {
+const RegisterScreen = ({ navigation }: Props) => {
   const toast = useToast();
 
-  const stateUser = useReduxSelector(selectLogin);
-  const reduxDispatch = useDispatch();
   const [isSecure, setIsSecure] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -111,28 +105,27 @@ const SettingsScreen = ({ navigation }: Props) => {
   };
 
   const getFormData = () => {
-    const payload: Partial<IUser> = {};
+    const payload: Partial<IRegister> = {};
     (Object.keys(formState) as FieldKey[]).forEach((key) => {
       payload[key] = formState[key].value;
     });
-    return payload as IUser;
+    return payload as IRegister;
   };
 
-  const handleUpdatePress = async () => {
+  const handleRegisterPress = async () => {
     const valid = validateForm();
     if (!valid) return;
+    setLoading(true);
 
     try {
-      setLoading(true);
       const formData = getFormData();
-      await updateAccount(formData);
+      await register(formData);
       setLoading(false);
-      showSuccessToast("Account updated successfully");
+      showSuccessToast("Your account has been created successfully");
+      navigation.goBack();
     } catch (error) {
       const err = error as Error;
-      showErrorToast(
-        err?.message || "Failed to update your account, please try again"
-      );
+      showErrorToast(err?.message || "Failed to register, please try again");
     }
   };
 
@@ -140,23 +133,7 @@ const SettingsScreen = ({ navigation }: Props) => {
     navigation.goBack();
   };
 
-  const handleLogoutPressed = () => {
-    reduxDispatch(setIsAuthenticated(false));
-    reduxDispatch(
-      setLogin(
-        {
-          userName: "",
-          firstName: "",
-          lastName: "",
-          email: "",
-        },
-        ""
-      )
-    );
-  };
-
   const showSuccessToast = (message: string) => {
-    setLoading(false);
     toast.show(message, {
       type: "success",
       placement: "bottom",
@@ -166,6 +143,7 @@ const SettingsScreen = ({ navigation }: Props) => {
   };
 
   const showErrorToast = (message: string) => {
+    setLoading(false);
     toast.show(message, {
       type: "danger",
       placement: "bottom",
@@ -188,11 +166,13 @@ const SettingsScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header onBackPress={handleOnBackPressed} title={"Account Settings"} />
+      <Header onBackPress={handleOnBackPressed} title={""} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
+        <Text style={styles.registerTitleText}>Create an account</Text>
+
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="never"
@@ -301,9 +281,9 @@ const SettingsScreen = ({ navigation }: Props) => {
 
           <TouchableOpacity
             disabled={!isFormValid || loading}
-            onPress={handleUpdatePress}
+            onPress={handleRegisterPress}
             style={[
-              styles.updateButton,
+              styles.registerButton,
               {
                 backgroundColor: isFormValid
                   ? Colors.default.primary
@@ -312,7 +292,7 @@ const SettingsScreen = ({ navigation }: Props) => {
             ]}
           >
             <View style={styles.buttonContainer}>
-              <Text style={styles.updateButtonText}>Update</Text>
+              <Text style={styles.registerButtonText}>Register</Text>
               {loading && (
                 <ActivityIndicator
                   style={{ marginLeft: 8 }}
@@ -323,12 +303,6 @@ const SettingsScreen = ({ navigation }: Props) => {
             </View>
           </TouchableOpacity>
         </ScrollView>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={handleLogoutPressed}
-        >
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -344,7 +318,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 16,
   },
-  updateButton: {
+  registerButton: {
     backgroundColor: Colors.default.primary,
     paddingVertical: 14,
     marginHorizontal: 16,
@@ -353,24 +327,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  updateButtonText: {
+  registerButtonText: {
     color: Colors.default.white,
     fontWeight: "600",
     fontSize: 16,
   },
-  logoutButton: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
-    backgroundColor: Colors.default.secondary,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 24,
-  },
-  logoutText: {
-    color: Colors.default.white,
-    fontSize: 16,
+  registerTitleText: {
+    fontSize: 22,
+    color: Colors.default.primary,
     fontWeight: "600",
+    padding: 12,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -379,4 +345,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingsScreen;
+export default RegisterScreen;
