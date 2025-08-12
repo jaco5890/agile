@@ -1,7 +1,7 @@
 export default {
   default: {
-    primary: "#06B4FD",
-    secondary: "#192432",
+    primary: "#86236c",
+    secondary: "#48657d",
     background: "#F9F9F9",
     success: "#E5F3E0",
     error: "#FADDD9",
